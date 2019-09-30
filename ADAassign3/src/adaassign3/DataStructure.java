@@ -11,4 +11,5 @@ package adaassign3;
  */
 public class DataStructure {
     
+    
 }
