@@ -5,6 +5,8 @@
  */
 package adaassign3;
 
+import java.util.Stack;
+
 /**
  *
  * @author will2
@@ -15,7 +17,21 @@ public class ADAassign3 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        Stack<String> stackOfCards = new Stack<>();
+        
+        stackOfCards.push("1");
+        stackOfCards.push("2");
+        stackOfCards.push("3");
+        stackOfCards.push("4");
+        
+        System.out.println(stackOfCards);
+        
+        System.out.println(stackOfCards.peek());
+        
+        System.out.println(stackOfCards.search("3"));
+
+        
+
     }
-    
+
 }
