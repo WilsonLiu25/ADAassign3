@@ -16,6 +16,34 @@ public class BinarySearchTree implements Dictionary {
     //sentinal replaces NIL
     protected Node nil;
     
+    //Creates a binary search tree with just a NIL node, which is the root
+    public BinarySearchTree() {
+        setNil(new Node(null));
+        root = nil;
+    }
+    
+    //Sets the sentinel NIL to a given node
+    protected void setNil(Node node){
+        nil = node;
+        nil.parent = nil;
+        nil.left = nil;
+        nil.right = nil;
+    }
+    
+    //Returns true if the given node is the sentinel NIL
+    public boolean isNil(Object node){
+        return node == nil;
+    }
+    
+    //Traverse the tree in inorder applying a Visitor to each node
+    public void inorderWalk(Visitor visitor) {
+        inorderWalk(root, visitor);
+    }
+    
+    
+    
+    
+            
     
     
     
@@ -80,12 +108,7 @@ public class BinarySearchTree implements Dictionary {
             
             return result;
         }
-        
-        
-        
     }
-    
-    
     
     //interface for when we visit a node during a walk
     public interface Visitor {
