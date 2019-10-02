@@ -5,11 +5,62 @@
  */
 package adaassign3;
 
+import java.awt.Color;
+
 /**
  *
  * @author will2
  */
-public class DataStructure {
+public class DataStructure extends BinarySearchTree{
+    protected static final Color RED = Color.red;
+    protected static final Color BLACK = Color.black;
+    
+    //set the sentinel node to a given node, and make the sentinel black
+    public void setNil(Node node) {
+        node.color = BLACK;
+        super.setNil(node);
+    }
+    
+    //create a redblack tree with just a single node with is the root node
+    public DataStructure() {
+        setNil(new Node(null));
+        root = nil;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    protected class Node extends BinarySearchTree.Node{
+        //this nodes color, red of black
+        protected Color color;
+        
+        //Initialises a node with the data, nades other pointers nil and makes the node red
+        public Node(Comparable data) {
+            super(data);
+            this.color = RED;
+        }
+        
+        //
+        public String toString() {
+            return super.toString() + ", " + (color == RED ? "red" : "black");
+        }
+        
+    }
+    
+    
     
     
 }
