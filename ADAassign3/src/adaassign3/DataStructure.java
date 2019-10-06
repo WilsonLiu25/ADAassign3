@@ -15,17 +15,22 @@ public class DataStructure extends BinarySearchTree{
     protected static final Color RED = Color.red;
     protected static final Color BLACK = Color.black;
     
+    //create a redblack tree with just a single node with is the root node
+    public DataStructure() {
+        setNil(new Node(null));
+        root = nil;
+    }
+    
     //set the sentinel node to a given node, and make the sentinel black
     public void setNil(Node node) {
         node.color = BLACK;
         super.setNil(node);
     }
     
-    //create a redblack tree with just a single node with is the root node
-    public DataStructure() {
-        setNil(new Node(null));
-        root = nil;
-    }
+    //performs a left rotation on a node, making a node's right child its parent 
+   protected void leftRotate(Node x) {
+       Node y = (Node)
+   }
     
     
     

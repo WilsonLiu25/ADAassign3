@@ -126,22 +126,137 @@ public class BinarySearchTree implements Dictionary {
         return x;
     }
     
+    //returns the node with the maxium key in the tree
+    public Object maximum() {
+        return treeMaximum(root);
+    }
     
+    protected Object treeMaximum(Node x) {
+        while(x.right != nil){
+            x = x.right;
+        }
+        
+        return x;
+    }
     
+    //returns the successor of a given node in an inorder walk of the tree
+    public Object successor(Object node) {
+        Node x = (Node) node;
+        
+        if (x.right != nil) {
+            return treeMinimum(x.right);
+        }
+        
+        Node y = x.parent;
+        
+        while(y != nil && x == y.right) {
+            x = y;
+            y= y.parent;
+        }
+        
+        return y;
+    }
     
+    //returns the predecessor of a given node in an inorder walk of the tree.
+    public Object predecessor(Object node){
+        Node x = (Node) node;
+        
+        if (x.left != nil) {
+            return treeMaximum(x.left); 
+        }
+        
+        Node y = x.parent;
+        
+        while(y != nil && x == y.left) {
+            x = y;
+            y = y.parent;
+        }
+        
+        return y;
+    }
     
+    //inserts data into the tree, creating a new node for this data
+    public Object insert(Comparable data) {
+        Node z = new Node(data);
+        treeInsert(z);
+        
+        return z;
+    }    
     
+    public void treeInsert(Node z) {
+        Node y = nil;
+        Node x = root;
+        
+        while (x != nil) {
+            y = x;
+            if (z.compareTo(x) <= 0) {
+                x = x.left;
+                
+            } else {
+                x = x.right;
+            }
+        }
+        
+        z.parent = y;
+        
+        if (y == nil) {
+            root = z; //the tree had been empty
+        } else {
+            if (z.compareTo(y) <= 0) {
+                y.left = z;
+            } else {
+                y.right = z;
+            }
+        }
+    }
     
-    
-    
+    //removes a node from the tree
+    public void delete(Object node){
+        Node z = (Node) node;
+        
+        //make sure that there is no attempt to delete the sentinel
+        if (z == nil) {
+            //throw new DeleteSentinelException();
+            System.out.println("there was an attempt to delete the sentinel");
+        }
+        
+        Node x; //replaces z as the subtree's root
+        
+        if (z.left == nil) {
+            x = z.right;
+        } else if (z.right == nil) {
+            x = z.left;
+        } else {                     //neither child is nil
+            x = (Node) successor(z); //replaces with next item
             
+            delete(x); //free x from its current position
+            
+            //splice out z and put x in its place by fixing links with children
+            x.left = z.left;
+            x.right = z.right;
+            x.left.parent = x;
+            x.right.parent = x;
+        }
+        
+        //fix links between the parent of the subtree and x
+        if (x != nil) {
+            x.parent = z.parent;
+        }
+        
+        if (root == z) {
+            root = x;
+        } else if (z == x.parent.left) {
+            x.parent.left = x;
+            
+        } else {
+            x.parent.right = x;
+        }
+    }
     
-    
-    
-    
-    
-    
-    
+    //returns the data stored in a node
+    public static Comparable dereference(Object node) {
+        return ((Node) node).data;
+    }
     
     protected class Node implements Comparable {
         //The data stored in the node
