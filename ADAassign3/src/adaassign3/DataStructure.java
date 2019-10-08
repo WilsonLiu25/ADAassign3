@@ -19,6 +19,8 @@ public class DataStructure extends BinarySearchTree{
     public DataStructure() {
         setNil(new Node(null));
         root = nil;
+        
+        System.out.println("DataStructure Object is made");
     }
     
     //set the sentinel node to a given node, and make the sentinel black
@@ -88,6 +90,7 @@ public class DataStructure extends BinarySearchTree{
        Node z = new Node(data);
        treeInsert(z);
        
+       System.out.println(z);
        return z;
    }
    
@@ -197,7 +200,7 @@ public class DataStructure extends BinarySearchTree{
    }
    
    //retores the red=black properties of the tree after a deletion
-   protected void deleteFixup(Node x) {
+   protected void DeleteFixup(Node x) {
         while (x != root && x.color == BLACK) {
             if (x.parent.left == x) {
                 Node w = (Node) x.parent.right;
@@ -286,22 +289,7 @@ public class DataStructure extends BinarySearchTree{
    public int blackHeight() {
        return blackHeight((Node) root);
    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+   
     protected class Node extends BinarySearchTree.Node{
         //this nodes color, red of black
         protected Color color;
@@ -312,14 +300,42 @@ public class DataStructure extends BinarySearchTree{
             this.color = RED;
         }
         
-        //
         public String toString() {
             return super.toString() + ", " + (color == RED ? "red" : "black");
         }
         
     }
     
+    //if data is contained in the node, return true
+    public boolean contains(Comparable data){
+        Node current = (Node) root;
+        
+        if (containsInNode(current, data)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     
+    //searches the tree for contains, return true if contains data is found
+    private boolean containsInNode(Node x, Comparable data) {
+        if (x != nil) {
+            if (x.compareTo(new BinarySearchTree.Node(data)) == 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
     
+    //finds the gap between 2 smallest nodes
+    public int minGap(Node x, Node y){
+        if (root == null) {
+            return Integer.MIN_VALUE;
+        }
+        
+        //TODO: Finish off. Add minGap(node, data)
+        
+    }
     
 }
