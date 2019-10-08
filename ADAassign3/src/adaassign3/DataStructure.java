@@ -29,9 +29,263 @@ public class DataStructure extends BinarySearchTree{
     
     //performs a left rotation on a node, making a node's right child its parent 
    protected void leftRotate(Node x) {
-       Node y = (Node)
+       Node y = (Node) x.right;
+       
+       //swap the inbetween subtree from y to x.
+       x.right = y.left;
+       if (y.left != nil) {
+           y.left.parent = x;
+       }
+       
+       //make y the root of the subtree for which x was the root
+       y.parent = x.parent;
+       
+       //if x is the root of the entire tree, make y the root.
+       //Otherwise, make y the correct child of the subtree's parent
+       if (x.parent == nil) {
+           root = y;
+       } else {
+           if (x == x.parent.left) {
+               x.parent.left = y;
+           } else {
+               x.parent.right = y;
+           }
+       }
+       
+       //relink x and y
+       y.left = x;
+       x.parent = y;
+       
    }
+   
+   //performs a right rotation on a node, making the node's left child its parent
+   protected void rightRotate(Node x) {
+       Node y = (Node) x.left;
+       
+       x.left = y.right;
+       if (x.left != null) {
+           y.right.parent = x;
+       }
+       
+       y.parent = x.parent;
+       
+       y.right = x;
+       x.parent = y;
+       
+       if (root == x) {
+           root = y;
+       } else {
+           if (y.parent.left == x) {
+               y.parent.left = y;
+           } else {
+               y.parent.right = y;
+           } 
+       }
+   }
+   
+   //inserts data into the tree, creating a new node for this data
+   public Object insert(Comparable data){
+       Node z = new Node(data);
+       treeInsert(z);
+       
+       return z;
+   }
+   
+   //inserts a node into the tree
+   protected void treeInsert(Node z) {
+       super.treeInsert(z);
+       insertFixup(z);
+   }
+   
+   //retores the red-blck conditions of the tree after inserting a node
+   protected void insertFixup(Node z) {
+       Node y = null;
+       
+       while(((Node) z.parent).color == RED) {
+           if (z.parent == z.parent.parent.left) {
+               y = (Node) z.parent.parent.right;
+               
+               if (y.color == RED) {
+                   ((Node) z.parent).color = BLACK;
+                   y.color = BLACK;
+                   ((Node) z.parent.parent).color = RED;
+                   z = (Node) z.parent.parent;
+               } else {
+                   if (z == z.parent.right) {
+                       z = (Node) z.parent;
+                       leftRotate(z); 
+                   }
+                   
+                   ((Node) z.parent).color = BLACK;
+                   ((Node) z.parent.parent).color = RED;
+                   rightRotate((Node) z.parent.parent);
+               }
+           } else {
+               y = (Node) z.parent.parent.left;
+               if (y.color == RED) {
+                   ((Node) z.parent).color = BLACK;
+                   y.color = BLACK;
+                   ((Node) z.parent.parent).color = RED;
+                   z = (Node) z.parent.parent;
+               } else {
+                   if (z == z.parent.left) {
+                       z = (Node) z.parent;
+                       rightRotate(z);
+                   }
+                   
+                   ((Node) z.parent).color = BLACK;
+                   ((Node) z.parent.parent).color = RED;
+                   leftRotate((Node) z.parent.parent);
+               }
+           }
+       }
+       
+       ((Node) root).color = BLACK;
+   }
+   
+   //Removes a node from the tree
+   public void delete(Object handle) {
+       Node z = (Node) handle;
+       Node y = z;
+       Node x = (Node) nil;
+       
+       //do not allow the sentinel to be deleted
+       if(z == nil) {
+           //throw new DeleteSentinelException();
+           System.out.println("there was an attempt to delete the sentinel");
+       }
+       
+       if (z.left != nil && z.right != nil) {
+           y = (Node) successor(z);
+       }
+       
+       if (z.left != nil) {
+           x = (Node) y.left;
+       } else {
+           x = (Node) y.right;
+       }
+       
+       x.parent = y.parent;
+       
+       if (y.parent == nil) {
+           root = x; 
+       } else if (y == y.parent.left) {
+           y.parent.left = x; 
+       } else {
+           y.parent.right = x;
+       }
+       
+       if (y != z) {
+           y.left = z.left;
+           y.left.parent = y;
+           y.right = z.right;
+           y.right.parent = y;
+           y.parent = z.parent;
+           
+           if (z == root) {
+               root = y;
+           } else if (z == z.parent.left) {
+               z.parent.left = y;
+           } else {
+               z.parent.right = y;
+           }
+       }
+       
+       if (y.color == BLACK) {
+           DeleteFixup(x);
+       }
+   }
+   
+   //retores the red=black properties of the tree after a deletion
+   protected void deleteFixup(Node x) {
+        while (x != root && x.color == BLACK) {
+            if (x.parent.left == x) {
+                Node w = (Node) x.parent.right;
+
+                if (w.color == RED) {
+                    w.color = BLACK;
+                    ((Node) x.parent).color = RED;
+                    leftRotate((Node) x.parent);
+                    w = (Node) x.parent.right;
+                }
+
+                if (((Node) w.left).color == BLACK
+                        && ((Node) w.right).color == BLACK) {
+                    w.color = RED;
+                    x = (Node) x.parent;
+                } else {
+                    if (((Node) w.right).color == BLACK) {
+                        ((Node) w.left).color = BLACK;
+                        w.color = RED;
+                        rightRotate(w);
+                        w = (Node) x.parent.right;
+                    }
+
+                    w.color = ((Node) x.parent).color;
+                    ((Node) x.parent).color = BLACK;
+                    ((Node) w.right).color = BLACK;
+                    leftRotate((Node) x.parent);
+                    x = (Node) root;
+                }
+            } else {
+                Node w = (Node) x.parent.left;
+
+                if (w.color == RED) {
+                    w.color = BLACK;
+                    ((Node) x.parent).color = RED;
+                    rightRotate((Node) x.parent);
+                    w = (Node) x.parent.left;
+                }
+
+                if (((Node) w.right).color == BLACK
+                        && ((Node) w.left).color == BLACK) {
+                    w.color = RED;
+                    x = (Node) x.parent;
+                } else {
+                    if (((Node) w.left).color == BLACK) {
+                        ((Node) w.right).color = BLACK;
+                        w.color = RED;
+                        leftRotate(w);
+                        w = (Node) x.parent.left;
+                    }
+
+                    w.color = ((Node) x.parent).color;
+                    ((Node) x.parent).color = BLACK;
+                    ((Node) w.left).color = BLACK;
+                    rightRotate((Node) x.parent);
+                    x = (Node) root;
+                }
+            }
+        }
+        x.color = BLACK;
+    }
+   
+   //returns the number of black nodse from a given node down to any leaf
+   //The values should be the same for all paths
+   public int blackHeight(Node z) {
+        if (z == nil) {
+            return 0;
+        }
+
+        int left = blackHeight((Node) z.left);
+        int right = blackHeight((Node) z.right);
+        if (left == right) {
+            if (z.color == BLACK) {
+                return left + 1;
+            } else {
+                return left;
+            }
+        } else {
+            //throw new BlackHeightException();
+            System.out.println("Thrown BlackHeightException");
+        }
+    }
     
+   //returns the number of black nodes from the root down to any leaf.
+   //The value should be the same for all paths.
+   public int blackHeight() {
+       return blackHeight((Node) root);
+   }
     
     
     
